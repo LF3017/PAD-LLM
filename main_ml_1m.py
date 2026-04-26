@@ -12,9 +12,9 @@ def load_model(model, filename):
     if os.path.exists(filename):
         model.load_state_dict(torch.load(filename, weights_only=True))
         model.eval()
-        print(f"模型已从 {filename} 加载")
+        print(f"Model loaded from {filename}.")
     else:
-        print(f"没有找到模型文件 {filename}，将从头开始训练")
+        print(f"Model file {filename} not found. Initializing training from scratch.")
 
 def main():
     normal_file = 'data/ml-1m/user_item_rating.txt'
@@ -70,11 +70,11 @@ def main():
 
     load_model(cnn_model, model_filename)
     if not os.path.exists(model_filename):
-        print("训练 ConvNeXt+Performer+Gate 模型...")
+        print("Training the ConvNeXt + Performer + Gate model...")
         cnn_model = train_cnn_3d(cnn_model, rating_train_tensor, item_labels_tensor, y_train_tensor, learning_rate, epochs=30 )
         save_model(cnn_model, model_filename)
     else:
-        print("使用已加载的 ConvNeXt+Performer+Gate 模型")
+        print("Using the pre-loaded ConvNeXt + Performer + Gate model.")
 
     train_features = extract_features(cnn_model, rating_train_tensor, item_labels_tensor, device,)
     random_attack_test_features = extract_features(cnn_model, rating_test_tensor1, item_labels_tensor, device,)
@@ -87,18 +87,17 @@ def main():
 
     detection_model = DetectionModel().to("cuda")
     train_detection_model(detection_model, train_features, y_train_tensor)
-
-    print("随机攻击测试结果")
+    print("Random Attack Results")
     test_detection_model(detection_model, random_attack_test_features , y_test_tensor1, threshold)
-    print("平均攻击测试结果")
+    print("Average Attack Results")
     test_detection_model(detection_model, average_attack_features, y_test_tensor2, threshold)
-    print("潮流攻击测试结果")
+    print("Bandwagon Attack Results")
     test_detection_model(detection_model, sybil_attack_features, y_test_tensor3, threshold)
-    print("对抗攻击ItemAE测试结果")
+    print("ItemAE Attack Results")
     test_detection_model(detection_model, adversarial_attack_ItemAE_features, y_test_tensor4, threshold)
-    print("对抗攻击WeightedMF_sgd测试结果")
+    print("WRMF+SGD Attack Results")
     test_detection_model(detection_model, adversarial_attack_WeightedMF_sgd_features, y_test_tensor5, threshold)
-    print("中毒攻击GOT测试结果")
+    print("GOAT Attack Results")
     test_detection_model(detection_model, posion_attack_features, y_test_tensor6, threshold)
 
 if __name__ == "__main__":
