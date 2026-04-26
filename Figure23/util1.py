@@ -92,7 +92,7 @@ def shap_tag_heatmap_20users_from_cnn(
     y_tensor,
     bg_size=64,
     seed=42,
-    tag="Figure 23",
+    tag="Figure23",
     tag_names=None,
     pick_mode="typical_by_logit",
     n_total=20,

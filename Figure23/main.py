@@ -46,7 +46,7 @@ def main():
         bg_size=64,
         pick_mode="typical_by_logit",
         n_total=20,
-        tag="Figure 23",
+        tag="Figure23",
         aggregate_only_rated=True,
         normalize_per_user=False
     )
